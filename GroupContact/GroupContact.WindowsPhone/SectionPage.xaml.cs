@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Diagnostics;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -93,14 +94,20 @@ namespace GroupContact
         /// </summary>
         /// <param name="sender">The GridView displaying the item clicked.</param>
         /// <param name="e">Event data that describes the item clicked.</param>
-        private void ItemView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
-            if (!Frame.Navigate(typeof(ItemPage), itemId))
-            {
-                var resourceLoader = ResourceLoader.GetForCurrentView("Resources");
-                throw new Exception(resourceLoader.GetString("NavigationFailedExceptionMessage"));
-            }
+            var item = (SampleDataItem)e.ClickedItem;
+            Windows.ApplicationModel.Chat.ChatMessage msg = new Windows.ApplicationModel.Chat.ChatMessage();
+            msg.Body = item.Subtitle;
+            msg.Recipients.Add(item.Description);
+            Debug.WriteLine($"{item.Title}, {item.Subtitle}, {item.Description}, {item.Content}");
+            await Windows.ApplicationModel.Chat.ChatMessageManager.ShowComposeSmsMessageAsync(msg);
+            //if (!Frame.Navigate(typeof(ItemPage), itemId))
+            //{
+            //    var resourceLoader = ResourceLoader.GetForCurrentView("Resources");
+            //    throw new Exception(resourceLoader.GetString("NavigationFailedExceptionMessage"));
+            //}
         }
 
         #region NavigationHelper registration
