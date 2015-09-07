@@ -6,6 +6,9 @@ using Windows.Storage;
 
 namespace GroupContact
 {
+    /// <summary>
+    /// copy from http://grogansoft.com/blog/?p=624
+    /// </summary>
     class XmlIO
     {
         public static async Task<T> ReadObjectFromXmlFileAsync<T>(string filename)

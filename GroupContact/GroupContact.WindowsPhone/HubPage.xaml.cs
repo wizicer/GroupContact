@@ -27,6 +27,7 @@ using Windows.Data.Json;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Contacts;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -262,7 +263,7 @@ namespace GroupContact
         public string Name { get; set; }
         public List<MessageItem> Items { get; set; }
     }
-    public class MessageItem
+    public class MessageItem:INotifyPropertyChanged
     {
         public string Id { get; set; }
         public string LastName { get; set; }
@@ -285,5 +286,12 @@ namespace GroupContact
         }
         public string RawContent { get; set; }
         public bool DoneSent { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void onPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -128,6 +128,8 @@ namespace GroupContact
             msg.Recipients.Add(item.Telephone);
             Debug.WriteLine($"{item.DisplayName}, {item.LastName}, {item.Content}, {item.Telephone}");
             await Windows.ApplicationModel.Chat.ChatMessageManager.ShowComposeSmsMessageAsync(msg);
+            item.DoneSent = true;
+            item.onPropertyChanged(nameof(item.DoneSent));
             //if (!Frame.Navigate(typeof(ItemPage), itemId))
             //{
             //    var resourceLoader = ResourceLoader.GetForCurrentView("Resources");
@@ -160,5 +162,40 @@ namespace GroupContact
         }
 
         #endregion
+    }
+    /// <summary>
+    /// copy from http://www.zagstudio.com/blog/1402
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class BooleanConverter<T> : IValueConverter
+    {
+        protected BooleanConverter(T trueValue, T falseValue)
+        {
+            this.TrueValue = trueValue;
+            this.FalseValue = falseValue;
+        }
+
+        public T TrueValue { get; set; }
+
+        public T FalseValue { get; set; }
+
+        public object Convert(object value, Type targetType,
+            object parameter, string language)
+        {
+            return Object.Equals(value, true) ?
+                this.TrueValue : this.FalseValue;
+        }
+
+        public object ConvertBack(object value, Type targetType,
+            object parameter, string language)
+        {
+            return Object.Equals(value, this.TrueValue) ? true : false;
+        }
+    }
+    public sealed class BooleanToDoubleConverter : BooleanConverter<double>
+    {
+        public BooleanToDoubleConverter()
+            : base(0.3, 1)
+        { }
     }
 }

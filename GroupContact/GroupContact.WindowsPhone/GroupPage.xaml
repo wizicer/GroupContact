@@ -19,6 +19,9 @@
             </NavigationThemeTransition>
         </TransitionCollection>
     </Page.Transitions>
+    <Page.Resources>
+        <local:BooleanToDoubleConverter x:Name="BooleanToDoubleConverter" />
+    </Page.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -57,7 +60,7 @@
             Margin="19,0,0,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Opacity="{Binding DoneSent, Converter={StaticResource BooleanToDoubleConverter}, Mode=OneWay}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
