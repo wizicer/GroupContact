@@ -14,6 +14,7 @@ namespace GroupContact.Data
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Xml.Serialization;
     using Windows.ApplicationModel.Contacts;
 #if WINDOWS_PHONE_APP
     //using Windows.Phone.PersonalInformation;
@@ -60,13 +61,18 @@ namespace GroupContact.Data
             this.ImagePath = imagePath;
             this.Items = new ObservableCollection<SampleDataItem>();
         }
+        public SampleDataGroup()
+        {
 
-        public string UniqueId { get; private set; }
-        public string Title { get; private set; }
-        public string Subtitle { get; private set; }
-        public string Description { get; private set; }
-        public string ImagePath { get; private set; }
-        public ObservableCollection<SampleDataItem> Items { get; private set; }
+        }
+
+        public string UniqueId { get;  set; }
+        public string Title { get;  set; }
+        public string Subtitle { get;  set; }
+        public string Description { get;  set; }
+        public string ImagePath { get;  set; }
+        [XmlIgnore]
+        public ObservableCollection<SampleDataItem> Items { get;  set; }
 
         public override string ToString()
         {

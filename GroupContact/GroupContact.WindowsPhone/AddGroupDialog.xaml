@@ -1,0 +1,27 @@
+﻿<ContentDialog
+    x:Class="GroupContact.AddGroupDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GroupContact"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="ADD GROUP"
+    PrimaryButtonText="Add"  
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <TextBox x:Name="criterion" Header="Criterion"/>
+        <TextBox x:Name="message" Header="Message"/>
+
+        <!-- Content body -->
+        <TextBlock x:Name="body" Style="{StaticResource MessageDialogContentStyle}" TextWrapping="Wrap">
+            <TextBlock.Text>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </TextBlock.Text>
+        </TextBlock>
+    </StackPanel>
+</ContentDialog>

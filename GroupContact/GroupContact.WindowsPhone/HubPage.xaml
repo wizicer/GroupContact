@@ -93,14 +93,14 @@
         </Hub>
     </Grid>
     <Page.BottomAppBar>
-        <CommandBar IsSticky="True" x:Name="appBar">
+        <CommandBar IsSticky="True" IsOpen="True" x:Name="appBar">
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="ZoomOut" IsCompact="False" Label="ZoomOut" />
-                <AppBarButton Icon="ZoomIn" IsCompact="False" Label="ZoomIn" />
+                <AppBarButton Icon="Add" IsCompact="False" Label="Add Group" Click="AppBarAddGroupButton_Click" />
+                <!--<AppBarButton Icon="ZoomIn" IsCompact="False" Label="ZoomIn" />-->
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Test01" />
-                <AppBarButton Label="Test02" />
+                <!--<AppBarButton Label="Test01" />
+                <AppBarButton Label="Test02" />-->
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

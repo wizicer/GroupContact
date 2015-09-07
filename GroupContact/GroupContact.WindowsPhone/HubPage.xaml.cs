@@ -20,6 +20,11 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
+using System.Xml.Serialization;
+using System.Diagnostics;
+using Windows.Data.Json;
+using System.Threading.Tasks;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -78,9 +83,46 @@ namespace GroupContact
         /// session.  The state will be null the first time a page is visited.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var sampleDataGroups = await SampleDataSource.GetGroupsAsync();
-            this.DefaultViewModel["Groups"] = sampleDataGroups;
+            //var dict = ApplicationData.Current.RoamingSettings.Values;
+            //var data = dict["data"] as byte[];
+            //if (data == null)
+            //{
+            //    var group = await SampleDataSource.GetGroupsAsync();
+            //    this.DefaultViewModel["Groups"] = group;
+            //}
+            //else
+            //{
+            //    var x = new XmlSerializer(typeof(IEnumerable<SampleDataGroup>));
+            //    using (var ms = new MemoryStream(data))
+            //    {
+            //        var group = x.Deserialize(ms) as IEnumerable<SampleDataGroup>;
+            //        this.DefaultViewModel["Groups"] = group;
+            //    }
+            //}
+            List<SampleDataGroup> data = null;
+            try
+            {
+                data = await XmlIO.ReadObjectFromXmlFileAsync<List<SampleDataGroup>>("data.xml");
+            }
+            catch (FileNotFoundException)
+            {
+                Debug.WriteLine("file not found");
+            }
+            catch (InvalidOperationException)
+            {
+                Debug.WriteLine("format not right");
+            }
+
+            Debug.WriteLine(data);
+            if (data == null)
+            {
+                var group = await SampleDataSource.GetGroupsAsync();
+                this.DefaultViewModel["Groups"] = group.ToList();
+            }
+            else
+            {
+                this.DefaultViewModel["Groups"] = data;
+            }
         }
 
         /// <summary>
@@ -91,20 +133,29 @@ namespace GroupContact
         /// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
         /// <param name="e">Event data that provides an empty dictionary to be populated with
         /// serializable state.</param>
-        private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
+        private async void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            // TODO: Save the unique state of the page here.
+            var group = this.DefaultViewModel["Groups"] as List<SampleDataGroup>;
+            await XmlIO.SaveObjectToXml(group.First(), "data.xml");
+            //var dict = ApplicationData.Current.RoamingSettings.Values;
+            //var x = new XmlSerializer(typeof(SampleDataGroup));
+            //using (var ms = new MemoryStream())
+            //{
+            //    var group = this.DefaultViewModel["Groups"];
+            //    x.Serialize(ms, group);
+            //    dict["data"] = ms.ToArray();
+            //}
         }
 
         /// <summary>
-        /// Shows the details of a clicked group in the <see cref="SectionPage"/>.
+        /// Shows the details of a clicked group in the <see cref="GroupPage"/>.
         /// </summary>
         /// <param name="sender">The source of the click event.</param>
         /// <param name="e">Details about the click event.</param>
         private void GroupSection_ItemClick(object sender, ItemClickEventArgs e)
         {
             var groupId = ((SampleDataGroup)e.ClickedItem).UniqueId;
-            if (!Frame.Navigate(typeof(SectionPage), groupId))
+            if (!Frame.Navigate(typeof(GroupPage), groupId))
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
@@ -149,5 +200,17 @@ namespace GroupContact
         }
 
         #endregion
+
+        private async void AppBarAddGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new AddGroupDialog();
+            var ret = await dlg.ShowAsync();
+
+
+        }
+    }
+    public class SImpleClass
+    {
+        public string Hello { get; set; }
     }
 }

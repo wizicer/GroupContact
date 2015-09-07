@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="GroupContact.SectionPage"
+    x:Class="GroupContact.GroupPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GroupContact"
@@ -39,7 +39,7 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock x:Uid="Header" Text="application name" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock x:Uid="Header" Text="Group Contact" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
             <TextBlock Text="{Binding Title}" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" TextWrapping="NoWrap" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" />
         </StackPanel>
 

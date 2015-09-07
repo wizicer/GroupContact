@@ -83,16 +83,20 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddGroupDialog.xaml.cs">
+      <DependentUpon>AddGroupDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HubPage.xaml.cs">
       <DependentUpon>HubPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SectionPage.xaml.cs">
-      <DependentUpon>SectionPage.xaml</DependentUpon>
+    <Compile Include="GroupPage.xaml.cs">
+      <DependentUpon>GroupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ItemPage.xaml.cs">
       <DependentUpon>ItemPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="XmlIO.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -111,11 +115,15 @@
     <Content Include="StoreManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AddGroupDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HubPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="SectionPage.xaml">
+    <Page Include="GroupPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

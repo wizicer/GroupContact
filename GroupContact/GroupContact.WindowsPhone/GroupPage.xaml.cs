@@ -18,6 +18,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
+using Windows.Storage;
+using System.Xml.Serialization;
+using System.Text;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -27,12 +30,12 @@ namespace GroupContact
     /// A page that displays an overview of a single group, including a preview of the items
     /// within the group.
     /// </summary
-    public sealed partial class SectionPage : Page
+    public sealed partial class GroupPage : Page
     {
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
 
-        public SectionPage()
+        public GroupPage()
         {
             this.InitializeComponent();
 
@@ -71,9 +74,24 @@ namespace GroupContact
         /// session.  The state will be null the first time a page is visited.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data.
             var group = await SampleDataSource.GetGroupAsync((string)e.NavigationParameter);
             this.DefaultViewModel["Group"] = group;
+            //var dict = ApplicationData.Current.RoamingSettings.Values;
+            //var data = dict["data"] as byte[];
+            //if (data != null)
+            //{
+            //    var group = await SampleDataSource.GetGroupAsync((string)e.NavigationParameter);
+            //    this.DefaultViewModel["Group"] = group;
+            //}
+            //else
+            //{
+            //    var x = new XmlSerializer(typeof(SampleDataGroup));
+            //    using (var ms = new MemoryStream(data))
+            //    {
+            //        var group = x.Deserialize(ms) as SampleDataGroup;
+            //        this.DefaultViewModel["Group"] = group;
+            //    }
+            //}
         }
 
         /// <summary>
@@ -86,7 +104,14 @@ namespace GroupContact
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            // TODO: Save the unique state of the page here.
+            //var dict = ApplicationData.Current.RoamingSettings.Values;
+            //var x = new XmlSerializer(typeof(SampleDataGroup));
+            //using (var ms = new MemoryStream())
+            //{
+            //    var group = this.DefaultViewModel["Group"];
+            //    x.Serialize(ms, group);
+            //    dict["data"] = ms.ToArray();
+            //}
         }
 
         /// <summary>
