@@ -74,7 +74,8 @@ namespace GroupContact
         /// session.  The state will be null the first time a page is visited.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var group = await SampleDataSource.GetGroupAsync((string)e.NavigationParameter);
+            //var group = await SampleDataSource.GetGroupAsync((string)e.NavigationParameter);
+            var group = e.NavigationParameter as ContactGroup;
             this.DefaultViewModel["Group"] = group;
             //var dict = ApplicationData.Current.RoamingSettings.Values;
             //var data = dict["data"] as byte[];
@@ -121,12 +122,11 @@ namespace GroupContact
         /// <param name="e">Event data that describes the item clicked.</param>
         private async void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
-            var item = (SampleDataItem)e.ClickedItem;
+            var item = (MessageItem)e.ClickedItem;
             Windows.ApplicationModel.Chat.ChatMessage msg = new Windows.ApplicationModel.Chat.ChatMessage();
-            msg.Body = item.Subtitle;
-            msg.Recipients.Add(item.Description);
-            Debug.WriteLine($"{item.Title}, {item.Subtitle}, {item.Description}, {item.Content}");
+            msg.Body = item.Content;
+            msg.Recipients.Add(item.Telephone);
+            Debug.WriteLine($"{item.DisplayName}, {item.LastName}, {item.Content}, {item.Telephone}");
             await Windows.ApplicationModel.Chat.ChatMessageManager.ShowComposeSmsMessageAsync(msg);
             //if (!Frame.Navigate(typeof(ItemPage), itemId))
             //{

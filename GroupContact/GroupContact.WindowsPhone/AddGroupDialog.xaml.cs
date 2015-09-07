@@ -24,9 +24,13 @@ namespace GroupContact
         {
             this.InitializeComponent();
         }
+        public string Message { get; set; }
+        public string Criterion { get; set; }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+            this.Message = message.Text;
+            this.Criterion = criterion.Text;
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

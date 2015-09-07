@@ -133,8 +133,13 @@ namespace GroupContact.Data
 
 
             var q = contacts
-                .Where(c => c.JobInfo.FirstOrDefault().IfNotNull(ci => ci.CompanyName == "笨笨老师"))
-                .Select(c => new SampleDataItem(c.Id, c.LastName, string.Format("祝{0}节日快乐", c.DisplayName ?? c.LastName), "Assets/DarkGray.png", c.Phones.FirstOrDefault().IfNotNull(cp => cp.Number), "desc"))
+                .Where(c => c.JobInfo.FirstOrDefault()?.CompanyName == "笨笨老师")
+                .Select(c => new SampleDataItem(
+                    c.Id, 
+                    c.LastName, 
+                    string.Format("祝{0}节日快乐", c.DisplayName ?? c.LastName), 
+                    "Assets/DarkGray.png", 
+                    c.Phones.FirstOrDefault()?.Number, "desc"))
                 .ToList();
 
 
@@ -148,47 +153,6 @@ namespace GroupContact.Data
             this.Groups.Add(group);
 #endif
 
-            //Uri dataUri = new Uri("ms-appx:///DataModel/SampleData.json");
-
-            //StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
-            //string jsonText = await FileIO.ReadTextAsync(file);
-            //JsonObject jsonObject = JsonObject.Parse(jsonText);
-            //JsonArray jsonArray = jsonObject["Groups"].GetArray();
-
-            //foreach (JsonValue groupValue in jsonArray)
-            //{
-            //    JsonObject groupObject = groupValue.GetObject();
-            //    SampleDataGroup group = new SampleDataGroup(groupObject["UniqueId"].GetString(),
-            //                                                groupObject["Title"].GetString(),
-            //                                                groupObject["Subtitle"].GetString(),
-            //                                                groupObject["ImagePath"].GetString(),
-            //                                                groupObject["Description"].GetString());
-
-            //    foreach (JsonValue itemValue in groupObject["Items"].GetArray())
-            //    {
-            //        JsonObject itemObject = itemValue.GetObject();
-            //        group.Items.Add(new SampleDataItem(itemObject["UniqueId"].GetString(),
-            //                                           itemObject["Title"].GetString(),
-            //                                           itemObject["Subtitle"].GetString(),
-            //                                           itemObject["ImagePath"].GetString(),
-            //                                           itemObject["Description"].GetString(),
-            //                                           itemObject["Content"].GetString()));
-            //    }
-            //    this.Groups.Add(group);
-            //}
-        }
-    }
-
-    internal static class ExtensionMethods
-    {
-        public static TRet IfNotNull<T, TRet>(this T obj, Func<T, TRet> action) where T : class
-        {
-            if (obj != null)
-            {
-                return action(obj);
-            }
-
-            return default(TRet);
         }
     }
 }

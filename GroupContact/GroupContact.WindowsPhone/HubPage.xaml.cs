@@ -25,6 +25,8 @@ using System.Xml.Serialization;
 using System.Diagnostics;
 using Windows.Data.Json;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Contacts;
+using System.Collections.ObjectModel;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -51,6 +53,8 @@ namespace GroupContact
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+
+            this.DefaultViewModel["Groups"] = this.GroupsViewModel;
         }
 
         /// <summary>
@@ -69,6 +73,8 @@ namespace GroupContact
         {
             get { return this.defaultViewModel; }
         }
+
+        public ObservableCollection<ContactGroup> GroupsViewModel { get; } = new ObservableCollection<ContactGroup>();
 
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
@@ -99,10 +105,11 @@ namespace GroupContact
             //        this.DefaultViewModel["Groups"] = group;
             //    }
             //}
-            List<SampleDataGroup> data = null;
+
+            List<ContactGroup> data = null;
             try
             {
-                data = await XmlIO.ReadObjectFromXmlFileAsync<List<SampleDataGroup>>("data.xml");
+                data = await XmlIO.ReadObjectFromXmlFileAsync<List<ContactGroup>>("data.xml");
             }
             catch (FileNotFoundException)
             {
@@ -116,12 +123,16 @@ namespace GroupContact
             Debug.WriteLine(data);
             if (data == null)
             {
-                var group = await SampleDataSource.GetGroupsAsync();
-                this.DefaultViewModel["Groups"] = group.ToList();
+                //var group = await SampleDataSource.GetGroupsAsync();
+                //this.DefaultViewModel["Groups"] = group.ToList();
             }
             else
             {
-                this.DefaultViewModel["Groups"] = data;
+                this.GroupsViewModel.Clear();
+                foreach (var item in data)
+                {
+                    this.GroupsViewModel.Add(item);
+                }
             }
         }
 
@@ -135,8 +146,10 @@ namespace GroupContact
         /// serializable state.</param>
         private async void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            var group = this.DefaultViewModel["Groups"] as List<SampleDataGroup>;
-            await XmlIO.SaveObjectToXml(group.First(), "data.xml");
+            //var group = this.DefaultViewModel["Groups"] as List<SampleDataGroup>;
+            //await XmlIO.SaveObjectToXml(group.First(), "data.xml");
+
+
             //var dict = ApplicationData.Current.RoamingSettings.Values;
             //var x = new XmlSerializer(typeof(SampleDataGroup));
             //using (var ms = new MemoryStream())
@@ -154,8 +167,8 @@ namespace GroupContact
         /// <param name="e">Details about the click event.</param>
         private void GroupSection_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var groupId = ((SampleDataGroup)e.ClickedItem).UniqueId;
-            if (!Frame.Navigate(typeof(GroupPage), groupId))
+            var group = ((ContactGroup)e.ClickedItem);
+            if (!Frame.Navigate(typeof(GroupPage), group))
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
@@ -206,11 +219,71 @@ namespace GroupContact
             var dlg = new AddGroupDialog();
             var ret = await dlg.ShowAsync();
 
+            if (ret == ContentDialogResult.Primary)
+            {
+                var group = await GetDataAsync(dlg.Message, dlg.Criterion);
+                this.GroupsViewModel.Add(group);
+                await XmlIO.SaveObjectToXml(this.GroupsViewModel.ToList(), "data.xml");
+            }
+
+        }
+
+        private async Task<ContactGroup> GetDataAsync(string message, string groupName)
+        {
+#if WINDOWS_PHONE_APP
+
+            ContactStore agenda = await ContactManager.RequestStoreAsync();
+            IReadOnlyList<Contact> contacts = null;
+            contacts = await agenda.FindContactsAsync();
+
+
+            var q = contacts
+                .Where(c => c.JobInfo.FirstOrDefault()?.CompanyName == groupName)
+                .Select(c => new MessageItem
+                {
+                    Id = c.Id,
+                    LastName = c.LastName,
+                    FirstName = c.FirstName,
+                    DisplayName = c.DisplayName,
+                    RawContent = message,
+                    Telephone = c.Phones.FirstOrDefault()?.Number,
+                })
+                .ToList();
+
+
+            var group = new ContactGroup { Name = groupName, Items = q };
+            return group;
+#endif
 
         }
     }
-    public class SImpleClass
+    public class ContactGroup
     {
-        public string Hello { get; set; }
+        public string Name { get; set; }
+        public List<MessageItem> Items { get; set; }
+    }
+    public class MessageItem
+    {
+        public string Id { get; set; }
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+        public string DisplayName { get; set; }
+        public string Telephone { get; set; }
+        [XmlIgnore]
+        public string Content
+        {
+            get
+            {
+                return this.RawContent.FormatToken(new Dictionary<string, string>
+                {
+                    [nameof(this.LastName)] = this.LastName,
+                    [nameof(this.FirstName)] = this.FirstName,
+                    [nameof(this.DisplayName)] = this.DisplayName,
+                    [nameof(this.Telephone)] = this.Telephone,
+                });
+            }
+        }
+        public string RawContent { get; set; }
+        public bool DoneSent { get; set; }
     }
 }

@@ -13,14 +13,13 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <TextBox x:Name="criterion" Header="Criterion"/>
+        <TextBox x:Name="criterion" Header="Group Name"/>
         <TextBox x:Name="message" Header="Message"/>
 
         <!-- Content body -->
         <TextBlock x:Name="body" Style="{StaticResource MessageDialogContentStyle}" TextWrapping="Wrap">
             <TextBlock.Text>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Available block: {nickname} {lastname} {firstname} {diaplayname}
             </TextBlock.Text>
         </TextBlock>
     </StackPanel>
